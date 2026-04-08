@@ -1,5 +1,6 @@
 import { Server, Socket } from "socket.io";
 import { addToQueue, getGame, removeFromQueue } from "../game/gameManager";
+import { rewriteMessage } from "../bot/rewrite";
 
 export function registerHandlers(io: Server, socket: Socket) {
   console.log("User connected:", socket.id);
@@ -27,7 +28,7 @@ export function registerHandlers(io: Server, socket: Socket) {
     }
   });
 
-  socket.on("send_message", ({ roomId, text }) => {
+  socket.on("send_message", async ({ roomId, text }) => {
     const game = getGame(roomId);
     if (!game) return;
     if (game.data.state !== "playing") return;
@@ -38,10 +39,39 @@ export function registerHandlers(io: Server, socket: Socket) {
       return;
     }
 
-    const message = game.addMessage(socket.id, text);
+    const receiverID = game.data.players.find((p) => p !== socket.id)!;
+    const senderSocket = io.sockets.sockets.get(socket.id);
+    const receiverSocket = io.sockets.sockets.get(receiverID);
 
-    io.to(roomId).emit("receive_message", {
-      message,
+    game.switchTurn();
+
+    // .emit("typing_indicator");
+    senderSocket?.emit("receive_message", {
+      message: {
+        author: socket.id,
+        text,
+      },
+      currentPlayer: game.data.currentPlayer,
+    });
+
+    let rewrittenText = text;
+
+    if (game.isAITurn()) {
+      rewrittenText = await rewriteMessage({
+        message: text,
+        playerHistory: game.data.messages
+          .filter((m) => m.author === socket.id)
+          .map((m) => m.original),
+      });
+    }
+
+    const message = game.addMessage(socket.id, text, rewrittenText);
+
+    receiverSocket?.emit("receive_message", {
+      message: {
+        author: message.author,
+        text: message.rewritten,
+      },
       currentPlayer: game.data.currentPlayer,
     });
   });

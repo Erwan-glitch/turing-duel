@@ -15,16 +15,15 @@ export class Game {
     };
   }
 
-  addMessage(author: PlayerID, text: string) {
+  addMessage(author: PlayerID, original: string, rewritten: string) {
     const message: Message = {
       id: Date.now().toString(),
       author,
-      text,
+      original,
+      rewritten,
     };
 
     this.data.messages.push(message);
-    this.data.turn++;
-    this.switchTurn();
 
     return message;
   }
@@ -33,9 +32,10 @@ export class Game {
     this.data.currentPlayer = this.data.players.find(
       (p) => p !== this.data.currentPlayer,
     )!;
+    this.data.turn++;
   }
 
-  setTakeoverTurn(minTurn = 3, maxTurn = 12) {
+  setTakeoverTurn(minTurn = 3, maxTurn = 4) {
     const randomTurn =
       Math.floor(Math.random() * (maxTurn - minTurn + 1)) + minTurn;
     this.data.takeoverTurn = randomTurn;

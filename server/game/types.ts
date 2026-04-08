@@ -3,7 +3,8 @@ export type PlayerID = string;
 export type Message = {
   id: string;
   author: PlayerID;
-  text: string;
+  original: string;
+  rewritten: string;
   aiRewritten?: boolean;
 };
 
