@@ -1,6 +1,6 @@
 import { Server, Socket } from "socket.io";
 import { addToQueue, getGame, removeFromQueue } from "../game/gameManager";
-import { rewriteMessage } from "../bot/rewrite";
+import { impersonateMessage } from "../bot/impersonate";
 
 export function registerHandlers(io: Server, socket: Socket) {
   console.log("User connected:", socket.id);
@@ -39,7 +39,11 @@ export function registerHandlers(io: Server, socket: Socket) {
       return;
     }
 
-    const receiverID = game.data.players.find((p) => p !== socket.id)!;
+    const receiverID = game.data.players.find((p) => p !== socket.id);
+    if (!receiverID) {
+      throw new Error("Receiver not found");
+    }
+
     const senderSocket = io.sockets.sockets.get(socket.id);
     const receiverSocket = io.sockets.sockets.get(receiverID);
 
@@ -57,8 +61,10 @@ export function registerHandlers(io: Server, socket: Socket) {
     let rewrittenText = text;
 
     if (game.isAITurn()) {
-      rewrittenText = await rewriteMessage({
-        message: text,
+      rewrittenText = await impersonateMessage({
+        incomingMessage: game.data.messages
+          .filter((m) => m.author === receiverID)
+          .slice(-1)[0].original,
         playerHistory: game.data.messages
           .filter((m) => m.author === socket.id)
           .map((m) => m.original),
@@ -79,9 +85,20 @@ export function registerHandlers(io: Server, socket: Socket) {
   socket.on("stop", ({ roomId }) => {
     const game = getGame(roomId);
     if (!game) return;
+    if (game.data.state !== "playing") return;
 
-    game.stopGame();
-    io.to(roomId).emit("game_stopped", game.data);
+    const playerId = socket.id;
+    const result = game.evaluateStop(playerId);
+
+    game.data.state = "finished";
+
+    io.to(roomId).emit("game_result", {
+      result,
+      messages: game.data.messages,
+      players: game.data.players,
+    });
+
+    console.log(`Game in ${roomId} finished. Result:`, result);
   });
 
   socket.on("disconnect", () => {

@@ -8,8 +8,12 @@ export function addToQueue(socketId: string) {
   waitingQueue.push(socketId);
 
   if (waitingQueue.length >= 2) {
-    const player1 = waitingQueue.shift()!;
-    const player2 = waitingQueue.shift()!;
+    const player1 = waitingQueue.shift();
+    const player2 = waitingQueue.shift();
+
+    if (!player1 || !player2) {
+      throw new Error("Not enough players to start a game");
+    }
 
     const roomId = `room-${roomCounter++}`;
     const game = new Game(roomId, [player1, player2]);

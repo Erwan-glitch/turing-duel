@@ -14,6 +14,12 @@ export default function Home() {
   const [input, setInput] = useState<string>("");
   const [currentPlayer, setCurrentPlayer] = useState<string | null>(null);
   const [myId, setMyId] = useState<string | null>(null);
+  const [gameResult, setGameResult] = useState<{
+    winner: string;
+    reason: string;
+    takeoverTurn: number;
+    stoppedBy: string | null;
+  } | null>(null);
 
   useEffect(() => {
     socket.connect();
@@ -31,6 +37,10 @@ export default function Home() {
     socket.on("receive_message", ({ message, currentPlayer }) => {
       setMessages((prev) => [...prev, message]);
       setCurrentPlayer(currentPlayer);
+    });
+
+    socket.on("game_result", ({ result, messages, players }) => {
+      setGameResult(result);
     });
 
     socket.on("error_message", (msg) => {
@@ -51,11 +61,46 @@ export default function Home() {
     setInput("");
   };
 
-  const isMyTurn = myId === currentPlayer;
+  const stopGame = () => {
+    if (!roomId) return;
+
+    socket.emit("stop", { roomId });
+  };
+
+  const isGameOver = gameResult !== null;
+  const isMyTurn = myId === currentPlayer && !isGameOver;
 
   return (
     <div className="p-4 max-w-xl mx-auto">
       <h1 className="text-xl font-bold mb-4">Turing Duel</h1>
+
+      {gameResult && (
+        <div className="mb-4 p-3 border rounded">
+          <div className="font-bold">
+            {gameResult.winner === myId
+              ? "🎉 You win!"
+              : gameResult.winner === "AI"
+                ? "🤖 AI wins!"
+                : "💀 You lose!"}
+          </div>
+
+          <div className="text-sm text-gray-600">
+            Reason: {gameResult.reason}
+          </div>
+
+          <div className="text-xs text-gray-400">
+            Takeover turn: {gameResult.takeoverTurn}
+          </div>
+        </div>
+      )}
+
+      {gameResult && (
+        <div className="text-xs text-gray-500">
+          {gameResult.stoppedBy === myId
+            ? "You stopped the game"
+            : "Opponent stopped the game"}
+        </div>
+      )}
 
       <div className="mb-2">
         {isMyTurn ? "🟢 Your turn" : "🔴 Opponent's turn"}
@@ -75,10 +120,22 @@ export default function Home() {
       </div>
 
       <div className="flex gap-2">
+        <button
+          className="bg-red-600 text-white px-4 py-2"
+          onClick={stopGame}
+          disabled={isGameOver}
+        >
+          🛑 STOP: AI took over
+        </button>
         <input
           className="border flex-1 p-2"
           value={input}
           onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              sendMessage();
+            }
+          }}
           disabled={!isMyTurn}
         />
         <button

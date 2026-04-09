@@ -19,3 +19,11 @@ export type GameData = {
   state: GameState;
   messages: Message[];
 };
+
+export type GameResult = {
+  winner: PlayerID | "AI";
+  loser: PlayerID;
+  reason: "too_early" | "correct" | "too_late";
+  stoppedBy: PlayerID;
+  takeoverTurn: number;
+};

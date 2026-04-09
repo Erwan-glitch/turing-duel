@@ -1,4 +1,4 @@
-import { GameData, PlayerID, Message } from "./types";
+import { GameData, PlayerID, Message, GameResult } from "./types";
 
 export class Game {
   data: GameData;
@@ -35,7 +35,7 @@ export class Game {
     this.data.turn++;
   }
 
-  setTakeoverTurn(minTurn = 3, maxTurn = 4) {
+  setTakeoverTurn(minTurn = 3, maxTurn = 12) {
     const randomTurn =
       Math.floor(Math.random() * (maxTurn - minTurn + 1)) + minTurn;
     this.data.takeoverTurn = randomTurn;
@@ -48,7 +48,48 @@ export class Game {
     );
   }
 
-  stopGame() {
-    this.data.state = "finished";
+  evaluateStop(playerId: PlayerID): GameResult {
+    const turn = this.data.turn;
+    const takeoverTurn = this.data.takeoverTurn;
+    const opponentId = this.data.players.find((p) => p !== playerId);
+
+    if (!opponentId) {
+      throw new Error("Opponent not found");
+    }
+
+    if (takeoverTurn === null) {
+      throw new Error("Takeover turn not set");
+    }
+
+    let result: GameResult;
+    const isTooLate = turn > takeoverTurn + 3; // Allow a grace period of 3 turns after takeover
+
+    if (turn < takeoverTurn) {
+      result = {
+        winner: opponentId,
+        loser: playerId,
+        reason: "too_early",
+        stoppedBy: playerId,
+        takeoverTurn,
+      };
+    } else if (isTooLate) {
+      result = {
+        winner: "AI",
+        loser: playerId,
+        reason: "too_late",
+        stoppedBy: playerId,
+        takeoverTurn,
+      };
+    } else {
+      result = {
+        winner: playerId,
+        loser: opponentId,
+        reason: "correct",
+        stoppedBy: playerId,
+        takeoverTurn,
+      };
+    }
+
+    return result;
   }
 }
