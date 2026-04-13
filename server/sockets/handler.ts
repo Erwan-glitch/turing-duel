@@ -53,7 +53,7 @@ export function registerHandlers(io: Server, socket: Socket) {
     senderSocket?.emit("receive_message", {
       message: {
         author: socket.id,
-        text,
+        original: text,
       },
       currentPlayer: game.data.currentPlayer,
     });
@@ -76,7 +76,8 @@ export function registerHandlers(io: Server, socket: Socket) {
     receiverSocket?.emit("receive_message", {
       message: {
         author: message.author,
-        text: message.rewritten,
+        original: message.original,
+        rewritten: message.rewritten,
       },
       currentPlayer: game.data.currentPlayer,
     });
