@@ -1,18 +1,22 @@
-import { GameData, PlayerID, Message, GameResult } from "./types";
+import { GameId } from "../types/game";
+import { GameData, PlayerID, Message, GameResult } from "../types/types";
 
-export class Game {
+export class AitmGame {
   data: GameData;
 
-  constructor(id: string, players: PlayerID[]) {
+  constructor(roomId: string, players: PlayerID[], gameId: GameId) {
     this.data = {
-      id,
+      roomId,
       players,
+      gameId,
       turn: 0,
       currentPlayer: players[Math.floor(Math.random() * players.length)],
       takeoverTurn: null,
       state: "playing",
       messages: [],
     };
+
+    this.setTakeoverTurn();
   }
 
   addMessage(author: PlayerID, original: string, rewritten: string) {

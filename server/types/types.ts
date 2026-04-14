@@ -1,3 +1,5 @@
+import { GameId } from "./game";
+
 export type PlayerID = string;
 
 export type Message = {
@@ -11,8 +13,9 @@ export type Message = {
 export type GameState = "waiting" | "playing" | "finished";
 
 export type GameData = {
-  id: string;
+  roomId: string;
   players: PlayerID[];
+  gameId: GameId;
   turn: number;
   currentPlayer: PlayerID;
   takeoverTurn: number | null;

@@ -2,9 +2,15 @@
 
 import { motion } from "motion/react";
 import { MessageSquare } from "lucide-react";
-import { Button } from "../../components/ui/button";
+import { Button } from "../../../components/ui/button";
 
-export function HeroSection() {
+export function HeroSection({
+  onJoinQueue,
+  onlineCount,
+}: {
+  onJoinQueue: () => void;
+  onlineCount: number;
+}) {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b from-slate-950 via-slate-900 to-slate-800">
       {/* Animated background grid */}
@@ -61,11 +67,27 @@ export function HeroSection() {
           <Button
             size="lg"
             className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white px-12 py-6 text-lg rounded-full shadow-lg shadow-cyan-500/50 transition-all hover:shadow-xl hover:shadow-cyan-500/60 hover:scale-105 group"
+            onClick={onJoinQueue}
           >
             <MessageSquare className="mr-2 size-5 group-hover:scale-110 group-hover:rotate-6 transition-transform" />
             Join the Queue
           </Button>
         </motion.div>
+
+        {onlineCount > 0 && (
+          <div className="mt-12 flex items-center justify-center gap-8 text-slate-500 text-sm">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+              <span>
+                {`${onlineCount} player${onlineCount > 1 ? "s" : ""} online`}
+              </span>
+            </div>
+            <div className="hidden sm:block w-1 h-1 bg-slate-600 rounded-full" />
+            <div>
+              <span>Average wait time: 8 seconds</span>
+            </div>
+          </div>
+        )}
 
         {/* Scroll indicator */}
         <motion.div
