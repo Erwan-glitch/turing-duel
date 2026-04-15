@@ -9,7 +9,7 @@ export async function impersonateMessage({
 }: RewriteParams): Promise<string> {
   const prompt = buildPrompt(incomingMessage, playerHistory);
 
-  const body = {
+  const body = JSON.stringify({
     model: "openai/gpt-4.1-nano",
     temperature: 0.5,
     messages: [
@@ -20,20 +20,26 @@ export async function impersonateMessage({
       },
       { role: "user", content: prompt },
     ],
-  };
+  });
 
   try {
     const res = await fetch(process.env.LLM_API_URL!, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.LLM_API_KEY}`,
+        Authorization: `Bearer ${process.env.LLM_API_KEY_DEV}`, 
       },
-      body: JSON.stringify(body),
+      body,
     });
 
+    if (!res.ok) {
+      throw new Error(`LLM API error: ${res.status}`);
+    }
+
     const data = await res.json();
-    return data.choices[0].message.content.trim();
+    const content = data.choices?.[0]?.message?.content;
+
+    return content?.trim() ?? "";
   } catch (error) {
     console.error("Error rewriting message:", error);
     throw new Error("Failed to rewrite message");

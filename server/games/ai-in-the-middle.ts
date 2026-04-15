@@ -1,5 +1,10 @@
-import { GameId } from "../types/game";
-import { GameData, PlayerID, Message, GameResult } from "../types/types";
+import { GameId } from "../../types/game";
+import {
+  GameData,
+  PlayerID,
+  Message,
+  GameResult,
+} from "../../types/ai-in-the-middle";
 
 export class AitmGame {
   data: GameData;

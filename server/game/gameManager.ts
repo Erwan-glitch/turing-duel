@@ -1,4 +1,4 @@
-import { GameId, GamesConstructor } from "../types/game";
+import { GameId, GamesConstructor } from "../../types/game";
 import { AitmGame } from "../games/ai-in-the-middle";
 
 const gamesClasses: Record<GameId, GamesConstructor[GameId]> = {

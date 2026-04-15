@@ -1,4 +1,4 @@
-import { GameId } from "../types/game";
+import { GameId } from "../../types/game";
 
 const queues: Record<GameId, string[]> = {
   "ai-in-the-middle": [],

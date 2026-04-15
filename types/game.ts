@@ -1,4 +1,4 @@
-import { AitmGame } from "../games/ai-in-the-middle";
+import { AitmGame } from "../server/games/ai-in-the-middle";
 
 export type GameId = "ai-in-the-middle";
 

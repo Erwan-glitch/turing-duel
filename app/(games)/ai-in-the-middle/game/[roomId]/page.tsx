@@ -3,14 +3,8 @@
 import { useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useSocket } from "@/app/providers/socket-provider";
-
-interface Message {
-  id: string;
-  author: string;
-  original: string;
-  rewritten?: string;
-  aiRewritten?: boolean;
-}
+import { Message } from "@/types/ai-in-the-middle";
+import { ChatView } from "../../components/chat-view";
 
 function RevealView({
   messages,
@@ -76,15 +70,17 @@ function RevealView({
 }
 
 export default function GamePage() {
-  const { roomId } = useParams();
+  const params = useParams();
+  const roomId = Array.isArray(params.roomId)
+    ? params.roomId[0]
+    : params.roomId;
   const socket = useSocket();
-
   const joinedRef = useRef(false);
 
   const [messages, setMessages] = useState<Message[]>([]);
-  const [input, setInput] = useState<string>("");
+  const [input, setInput] = useState<string>(""); //TODO: enforce max length
   const [currentPlayer, setCurrentPlayer] = useState<string | null>(null);
-  const [myId, setMyId] = useState<string | null>(null);
+  const [myId, setMyId] = useState<string | undefined>(undefined);
   const [gameResult, setGameResult] = useState<{
     winner: string;
     reason: string;
@@ -197,7 +193,7 @@ export default function GamePage() {
 
     const encoded = btoa(JSON.stringify(payload));
 
-    const url = `${window.location.origin}/replay?data=${encoded}`;
+    const url = `${window.location.origin}/ai-in-the-middle/replay?data=${encoded}`;
     setShareUrl(url);
 
     if (navigator.clipboard) {
@@ -259,7 +255,9 @@ export default function GamePage() {
         {isMyTurn ? "🟢 Your turn" : "🔴 Opponent's turn"}
       </div>
 
-      <div className="border h-80 overflow-y-auto mb-4 p-2">
+      <ChatView messages={messages} myId={myId}></ChatView>
+
+      {/* <div className="border h-80 overflow-y-auto mb-4 p-2">
         {messages.map((msg, i) => (
           <div
             key={i}
@@ -272,7 +270,7 @@ export default function GamePage() {
             </span>
           </div>
         ))}
-      </div>
+      </div> */}
 
       <div className="flex gap-2">
         <button

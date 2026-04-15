@@ -2,11 +2,15 @@ import { Server, Socket } from "socket.io";
 import { createGame, getGame } from "../game/gameManager";
 import { addToQueue, removeFromQueue } from "../game/queueManager";
 import { impersonateMessage } from "../bot/impersonate";
+import { ClientToServerEvents, ServerToClientEvents } from "@/types/socket";
 
 let onlineCount = 0;
 const activeRooms = new Map<string, string>(); // socketId -> roomId
 
-export function registerHandlers(io: Server, socket: Socket) {
+export function registerHandlers(
+  io: Server<ClientToServerEvents, ServerToClientEvents>,
+  socket: Socket<ClientToServerEvents, ServerToClientEvents>,
+) {
   onlineCount++;
   console.log("User connected:", socket.id, "Online count:", onlineCount);
   io.emit("online_count", onlineCount);
@@ -88,6 +92,7 @@ export function registerHandlers(io: Server, socket: Socket) {
     // .emit("typing_indicator");
     senderSocket?.emit("receive_message", {
       message: {
+        id: Date.now().toString(),
         author: socket.id,
         original: text,
       },
@@ -118,6 +123,7 @@ export function registerHandlers(io: Server, socket: Socket) {
 
     receiverSocket?.emit("receive_message", {
       message: {
+        id: message.id,
         author: message.author,
         original: message.original,
         rewritten: message.rewritten,

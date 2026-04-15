@@ -4,13 +4,14 @@ import http from "http";
 import { Server } from "socket.io";
 import cors from "cors";
 import { registerHandlers } from "./sockets/handler";
+import { ClientToServerEvents, ServerToClientEvents } from "@/types/socket";
 
 const app = express();
 app.use(cors());
 
 const server = http.createServer(app);
 
-const io = new Server(server, {
+const io = new Server<ClientToServerEvents, ServerToClientEvents>(server, {
   cors: {
     origin: "*",
   },

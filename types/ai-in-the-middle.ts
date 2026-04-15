@@ -6,7 +6,7 @@ export type Message = {
   id: string;
   author: PlayerID;
   original: string;
-  rewritten: string;
+  rewritten?: string;
   aiRewritten?: boolean;
 };
 
