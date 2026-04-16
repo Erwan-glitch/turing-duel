@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "server": "tsx server/index.ts"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",

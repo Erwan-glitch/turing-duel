@@ -23,12 +23,10 @@ export function ChatView({
     }
   }, [messages]);
 
-  // if (!messages.length) return null;
-
   return (
     <div
       ref={containerRef}
-      className="bg-slate-800 rounded-xl h-full min-w-xs overflow-y-auto p-2 flex flex-col justify-end"
+      className="bg-slate-800 rounded-xl h-full min-w-xs overflow-y-scroll p-2 flex flex-col justify-end"
     >
       {messages.map((msg, i) => {
         const isMe =

@@ -27,7 +27,7 @@ export async function impersonateMessage({
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.LLM_API_KEY_DEV}`, 
+        Authorization: `Bearer ${process.env.LLM_API_KEY}`, 
       },
       body,
     });
