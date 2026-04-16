@@ -1,14 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-
-interface Message {
-  id: string;
-  author: string;
-  original: string;
-  rewritten?: string;
-  aiRewritten?: boolean;
-}
+import { SideBySideChat } from "../components/side-by-side-chat";
 
 export default function ReplayPage() {
   const data = useMemo(() => {
@@ -22,7 +15,7 @@ export default function ReplayPage() {
     try {
       return JSON.parse(atob(encoded));
     } catch (e) {
-      console.error("Invalid replay data");
+      console.error("Invalid replay data", e);
       return null;
     }
   }, []);
@@ -30,24 +23,12 @@ export default function ReplayPage() {
   if (!data) return <div className="p-4">Invalid or missing replay</div>;
 
   return (
-    <div className="p-4 max-w-2xl mx-auto">
-      <h1 className="text-xl font-bold mb-4">🎭 Replay</h1>
-
-      {data.messages.map((msg: Message, i: number) => {
-        const isTakeover = i === data.takeoverTurn;
-
-        return (
-          <div
-            key={msg.id}
-            className={`p-2 border mb-2 ${isTakeover ? "bg-yellow-200" : ""}`}
-          >
-            {isTakeover && (
-              <div className="text-xs font-bold">⚡ AI TOOK OVER HERE</div>
-            )}
-            <div>{msg.original}</div>
-          </div>
-        );
-      })}
+    <div className="h-[100dvh] w-[100dvw] p-2 flex flex-col gap-4 bg-slate-900">
+      <h1 className="text-xl font-bold">🎭 Replay</h1>
+      <SideBySideChat
+        messages={data.messages}
+        takeoverTurn={data.takeoverTurn}
+      ></SideBySideChat>
     </div>
   );
 }

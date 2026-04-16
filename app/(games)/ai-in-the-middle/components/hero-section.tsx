@@ -43,21 +43,6 @@ export function HeroSection({
           When did AI take control of your conversation?
         </motion.p>
 
-        {/* Description */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="max-w-2xl mx-auto mb-12 space-y-2 text-slate-400"
-        >
-          <p>Chat with a stranger.</p>
-          <p>At some point, AI rewrites your messages.</p>
-          <p>You won&apos;t see the same conversation anymore.</p>
-          <p className="text-cyan-400 font-medium">
-            Detect when it happens before they do.
-          </p>
-        </motion.div>
-
         {/* CTA Button */}
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
@@ -74,20 +59,23 @@ export function HeroSection({
           </Button>
         </motion.div>
 
-        {onlineCount > 0 && (
-          <div className="mt-12 flex items-center justify-center gap-8 text-slate-500 text-sm">
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-              <span>
-                {`${onlineCount} player${onlineCount > 1 ? "s" : ""} online`}
-              </span>
-            </div>
-            <div className="hidden sm:block w-1 h-1 bg-slate-600 rounded-full" />
-            <div>
-              <span>Average wait time: 8 seconds</span>
-            </div>
+        <div className="mt-12 flex items-center justify-center gap-8 text-slate-500 text-sm">
+          {onlineCount > 0 && (
+            <>
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                <span>
+                  {`${onlineCount} player${onlineCount > 1 ? "s" : ""} online`}
+                </span>
+              </div>
+
+              <div className="sm:block w-1 h-1 bg-slate-600 rounded-full" />
+            </>
+          )}
+          <div>
+            <span>Average wait time: 8 s</span>
           </div>
-        )}
+        </div>
 
         {/* Scroll indicator */}
         <motion.div

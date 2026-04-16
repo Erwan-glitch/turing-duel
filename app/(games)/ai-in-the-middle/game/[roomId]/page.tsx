@@ -1,10 +1,14 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useSocket } from "@/app/providers/socket-provider";
 import { Message } from "@/types/ai-in-the-middle";
 import { ChatView } from "../../components/chat-view";
+import { SideBySideChat } from "../../components/side-by-side-chat";
+import { ChatInputBox } from "../../components/chat-input-box";
+import { Button } from "@/app/components/ui/button";
+import { ClipboardCopy, Home, Play } from "lucide-react";
 
 function RevealView({
   messages,
@@ -19,51 +23,50 @@ function RevealView({
   onShare: () => void;
   shareUrl: string;
 }) {
+  const router = useRouter();
+
   return (
-    <div className="p-4">
+    <div className="p-4 flex flex-col gap-4">
       <h2 className="text-lg font-bold mb-4">🔍 What actually happened</h2>
 
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <h3 className="font-semibold mb-2">🧠 Your reality</h3>
-        </div>
-        <div>
-          <h3 className="font-semibold mb-2">👀 Opponent&apos;s reality</h3>
-        </div>
+      <SideBySideChat
+        messages={messages}
+        takeoverTurn={takeoverTurn}
+        myId={myId}
+      ></SideBySideChat>
 
-        {messages.map((msg: Message, i: number) => {
-          const isTakeover = i === takeoverTurn;
-          const isAfter = i >= takeoverTurn;
-          const isMe = msg.author === myId;
+      <div className="border text-slate-700/50"></div>
 
-          return (
-            <div key={msg.id} className="contents">
-              <div
-                className={`p-2 border rounded ${
-                  isTakeover ? "bg-yellow-200 text-black" : ""
-                }`}
-              >
-                {isTakeover && (
-                  <div className="text-xs font-bold">⚡ TAKEOVER</div>
-                )}
-                {isMe ? msg.original : msg.rewritten || msg.original}
-              </div>
+      <div className="flex flex-col md:flex-row gap-4">
+        <Button
+          className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white px-12 py-6 text-lg rounded-full shadow-lg shadow-cyan-500/50 transition-all hover:shadow-xl hover:brightness-110 hover:scale-105 group"
+          onClick={onShare}
+        >
+          <ClipboardCopy className="size-5"></ClipboardCopy>
+          Share this game
+        </Button>
 
-              <div
-                className={`p-2 border rounded ${
-                  isAfter ? "bg-yellow-200 text-black" : ""
-                }`}
-              >
-                {isMe ? msg.rewritten || msg.original : msg.original}
-              </div>
-            </div>
-          );
-        })}
+        <Button
+          className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white px-12 py-6 text-lg rounded-full shadow-lg shadow-purple-500/50 transition-all hover:shadow-xl hover:brightness-110 hover:scale-105 group"
+          onClick={() => {
+            router.push("/ai-in-the-middle/queue");
+          }}
+        >
+          <Play className="size-5"></Play>
+          Play Again
+        </Button>
+
+        <Button
+          className="bg-gradient-to-r from-orange-500 to-lime-600 hover:from-orange-600 hover:to-lime-700 text-white px-12 py-6 text-lg rounded-full shadow-lg shadow-orange-500/50 transition-all hover:shadow-xl hover:brightness-110 hover:scale-105 group"
+          onClick={() => {
+            router.push("/");
+          }}
+        >
+          <Home className="size-5"></Home>
+          Homepage
+        </Button>
       </div>
-
-      <button className="mt-6 bg-black text-white px-4 py-2" onClick={onShare}>
-        🔗 Share this game
-      </button>
+      
       <div className="text-xs mt-2 break-all">{shareUrl}</div>
     </div>
   );
@@ -207,98 +210,66 @@ export default function GamePage() {
   const isGameOver = gameResult !== null;
   const isMyTurn = myId === currentPlayer && !isGameOver;
 
-  if (gameResult && myId) {
-    return (
-      <RevealView
-        messages={messages}
-        takeoverTurn={gameResult.takeoverTurn}
-        myId={myId}
-        onShare={handleShare}
-        shareUrl={shareUrl}
-      />
-    );
-  }
-
   return (
-    <div className="p-4 max-w-xl mx-auto">
+    <div className="flex flex-col gap-4 p-4 mx-auto w-[100dvw] h-[100dvh] bg-slate-900">
       <h1 className="text-xl font-bold mb-4">Turing Duel</h1>
 
       {gameResult && (
-        <div className="mb-4 p-3 border rounded">
-          <div className="font-bold">
-            {gameResult.winner === myId
-              ? "🎉 You win!"
-              : gameResult.winner === "AI"
-                ? "🤖 AI wins!"
-                : "💀 You lose!"}
+        <>
+          <div className="mb-4 p-3 border rounded">
+            <div className="font-bold">
+              {gameResult.winner === myId
+                ? "🎉 You win!"
+                : gameResult.winner === "AI"
+                  ? "🤖 AI wins!"
+                  : "💀 You lose!"}
+            </div>
+
+            <div className="text-sm text-gray-600">
+              Reason: {gameResult.reason}
+            </div>
+
+            <div className="text-xs text-gray-400">
+              Takeover turn: {gameResult.takeoverTurn}
+            </div>
           </div>
 
-          <div className="text-sm text-gray-600">
-            Reason: {gameResult.reason}
+          <div className="text-xs text-gray-500">
+            {gameResult.stoppedBy === myId
+              ? "You stopped the game"
+              : "Opponent stopped the game"}
           </div>
-
-          <div className="text-xs text-gray-400">
-            Takeover turn: {gameResult.takeoverTurn}
-          </div>
-        </div>
+        </>
       )}
 
-      {gameResult && (
-        <div className="text-xs text-gray-500">
-          {gameResult.stoppedBy === myId
-            ? "You stopped the game"
-            : "Opponent stopped the game"}
-        </div>
-      )}
-
-      <div className="mb-2">
-        {isMyTurn ? "🟢 Your turn" : "🔴 Opponent's turn"}
-      </div>
-
-      <ChatView messages={messages} myId={myId}></ChatView>
-
-      {/* <div className="border h-80 overflow-y-auto mb-4 p-2">
-        {messages.map((msg, i) => (
-          <div
-            key={i}
-            className={msg.author === myId ? "text-right" : "text-left"}
-          >
-            <span className="inline-block px-2 py-1 border rounded">
-              {msg.author === myId
-                ? msg.original
-                : msg.rewritten || msg.original}
-            </span>
-          </div>
-        ))}
-      </div> */}
-
-      <div className="flex gap-2">
-        <button
-          className="bg-red-600 text-white px-4 py-2"
-          onClick={stopGame}
-          disabled={isGameOver}
-        >
-          🛑 STOP: AI took over
-        </button>
-        <input
-          className="border flex-1 p-2"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              sendMessage();
-            }
-          }}
-          disabled={!isMyTurn}
+      {gameResult && myId && (
+        <RevealView
+          messages={messages}
+          takeoverTurn={gameResult.takeoverTurn}
+          myId={myId}
+          onShare={handleShare}
+          shareUrl={shareUrl}
         />
-        <button
-          className="bg-black text-white px-4"
-          onClick={sendMessage}
-          disabled={!isMyTurn}
-        >
-          Send
-        </button>
-      </div>
+      )}
+
+      {!gameResult && (
+        <>
+          <ChatView messages={messages} myId={myId}></ChatView>
+
+          <div className="mb-2">
+            {isMyTurn ? "🟢 Your turn" : "🔴 Opponent's turn"}
+          </div>
+
+          <ChatInputBox
+            input={input}
+            setInput={setInput}
+            sendMessage={sendMessage}
+            stopGame={stopGame}
+            isGameOver={isGameOver}
+            isMyTurn={isMyTurn}
+          ></ChatInputBox>
+        </>
+      )}
     </div>
   );
 }

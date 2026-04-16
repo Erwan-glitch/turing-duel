@@ -33,6 +33,12 @@ export default function LandingPage() {
     <div className="min-h-screen bg-slate-950">
       <Navbar />
       <HeroSection onJoinQueue={onJoinQueue} onlineCount={onlineCount} />
+      <p>Chat with a stranger.</p>
+      <p>At some point, AI rewrites your messages.</p>
+      <p>You won&apos;t see the same conversation anymore.</p>
+      <p className="text-cyan-400 font-medium">
+        Detect when it happens before they do.
+      </p>
       <SplitConversationDemo />
       <CTASection onJoinQueue={onJoinQueue} />
       <Footer />
