@@ -3,8 +3,10 @@
 import { motion } from "motion/react";
 import { useState, useEffect } from "react";
 import { Zap } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export function Navbar() {
+  const router = useRouter();
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
@@ -16,8 +18,12 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+  const handleLogoClick = () => {
+    if (window.location.pathname !== "/") {
+      router.push("/");
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
   };
 
   return (
@@ -29,14 +35,14 @@ export function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
         <button
-          onClick={scrollToTop}
+          onClick={handleLogoClick}
           className="flex items-center gap-2 text-white hover:text-cyan-400 transition-colors"
         >
           <Zap className="size-5 text-cyan-400" />
           <span className="font-bold">Turing Duel</span>
         </button>
 
-        <div className="flex items-center gap-6">
+        {/* <div className="flex items-center gap-6">
           <a
             href="#how-it-works"
             className="text-slate-400 hover:text-white transition-colors text-sm"
@@ -52,7 +58,7 @@ export function Navbar() {
           <button className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white px-6 py-2 rounded-full text-sm font-medium transition-all hover:scale-105">
             Play Now
           </button>
-        </div>
+        </div> */}
       </div>
     </motion.nav>
   );

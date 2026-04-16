@@ -1,6 +1,6 @@
 import { Server, Socket } from "socket.io";
-import { createGame, getGame } from "../game/gameManager";
-import { addToQueue, removeFromQueue } from "../game/queueManager";
+import { createGame, getGame } from "../managers/gameManager";
+import { addToQueue, removeFromQueue } from "../managers/queueManager";
 import { impersonateMessage } from "../bot/impersonate";
 import { ClientToServerEvents, ServerToClientEvents } from "@/types/socket";
 
@@ -53,12 +53,15 @@ export function registerHandlers(
     const game = getGame(roomId);
 
     if (!game) {
-      socket.emit("error_message", "Game not found");
+      socket.emit("error_message", { message: "Game not found", kick: true });
       return;
     }
 
     if (!game.data.players.includes(playerId)) {
-      socket.emit("error_message", "You are not a player in this game");
+      socket.emit("error_message", {
+        message: "You are not a player in this game",
+        kick: true,
+      });
       return;
     }
 
@@ -77,7 +80,7 @@ export function registerHandlers(
 
     // 🚫 Enforce turns
     if (socket.id !== game.data.currentPlayer) {
-      socket.emit("error_message", "Not your turn");
+      socket.emit("error_message", { message: "Not your turn", kick: false });
       return;
     }
 
@@ -136,8 +139,15 @@ export function registerHandlers(
     const game = getGame(roomId);
     if (!game) return;
     if (game.data.state !== "playing") return;
-
     const playerId = socket.id;
+    if (!game.data.players.includes(playerId)) {
+      socket.emit("error_message", {
+        message: "You are not a player in this game",
+        kick: true,
+      });
+      return;
+    }
+
     const result = game.evaluateStop(playerId);
 
     game.data.state = "finished";

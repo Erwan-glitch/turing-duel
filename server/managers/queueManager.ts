@@ -1,20 +1,27 @@
 import { GameId } from "../../types/game";
+import { customAlphabet } from "nanoid";
 
 const queues: Record<GameId, string[]> = {
   "ai-in-the-middle": [],
 };
 
-let roomCounter = 1;
+const nanoid = customAlphabet(
+  "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+  6,
+);
 
 export function addToQueue(socketId: string, gameId: GameId) {
   const queue = queues[gameId];
-  
+
   if (queue.includes(socketId)) {
     return null; // Already in queue
   }
-  
+
   queue.push(socketId);
-  console.log(`Adding ${socketId} to queue for ${gameId}. Current queue:`, queue);
+  console.log(
+    `Adding ${socketId} to queue for ${gameId}. Current queue:`,
+    queue,
+  );
 
   if (queue.length < 2) return null;
 
@@ -25,7 +32,7 @@ export function addToQueue(socketId: string, gameId: GameId) {
     throw new Error("Not enough players to start a game");
   }
 
-  const roomId = `${gameId}-room-${roomCounter++}`;
+  const roomId = nanoid();
   console.log("Queue after match:", queues[gameId]);
 
   return {

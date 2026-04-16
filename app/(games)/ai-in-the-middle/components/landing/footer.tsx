@@ -1,7 +1,5 @@
 "use client";
 
-import { motion } from "motion/react";
-
 export function Footer() {
   return (
     <footer className="bg-slate-950 border-t border-slate-800 py-12">
@@ -25,27 +23,18 @@ export function Footer() {
 
           {/* Links */}
           <div className="flex gap-6 text-sm text-slate-500">
-            <motion.a
-              href="#"
-              whileHover={{ color: "#06b6d4" }}
-              className="hover:text-cyan-400 transition-colors"
-            >
-              About
-            </motion.a>
-            <motion.a
-              href="#"
-              whileHover={{ color: "#06b6d4" }}
-              className="hover:text-cyan-400 transition-colors"
-            >
+            <a href="#" className="hover:text-cyan-400 transition-colors">
+              GitHub
+            </a>
+            <a href="#" className="hover:text-cyan-400 transition-colors">
               Privacy
-            </motion.a>
-            <motion.a
-              href="#"
-              whileHover={{ color: "#06b6d4" }}
+            </a>
+            <a
+              href="mailto:github.com.3bn2j@passmail.com"
               className="hover:text-cyan-400 transition-colors"
             >
               Contact
-            </motion.a>
+            </a>
           </div>
         </div>
 

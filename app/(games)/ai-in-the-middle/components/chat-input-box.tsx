@@ -49,18 +49,18 @@ export const ChatInputBox = ({
       />
       <div className="flex items-center gap-2">
         <Button
-          className="bg-gradient-to-r from-red-500/70 to-orange-500/70 text-white m-2"
+          className="bg-gradient-to-r from-red-500/70 to-orange-500/70 text-white m-2 shrink min-w-0"
           onClick={stopGame}
           disabled={isGameOver}
           size={"lg"}
         >
           <OctagonPause className="size-5" />
-          AI took over
+          <span className="truncate">AI took over</span>
         </Button>
 
         <div className="flex-1"></div>
 
-        <div className="text-white/50 text-xs mx-3 font-mono">
+        <div className="text-white/50 text-xs mx-2 font-mono">
           {inputLength}/{maxLength}
         </div>
 

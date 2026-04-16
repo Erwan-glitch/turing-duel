@@ -3,7 +3,7 @@ import { GameId } from "./game";
 
 export interface ServerToClientEvents {
   online_count: (count: number) => void;
-  error_message: (message: string) => void;
+  error_message: (data: { message: string; kick: boolean }) => void;
 
   game_start: (data: {
     roomId: string;

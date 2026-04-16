@@ -4,7 +4,7 @@ import { Message } from "@/types/ai-in-the-middle";
 import { motion } from "motion/react";
 import { useInView } from "motion/react";
 import { useRef } from "react";
-import { ChatView } from "./chat-view";
+import { ChatView } from "../chat-view";
 
 export function SplitConversationDemo() {
   const ref = useRef(null);

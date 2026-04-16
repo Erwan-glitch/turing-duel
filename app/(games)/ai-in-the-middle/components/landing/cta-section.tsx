@@ -41,7 +41,7 @@ export function CTASection({ onJoinQueue }: { onJoinQueue: () => void }) {
           </h2>
 
           <p className="text-xl text-slate-400 mb-12 max-w-2xl mx-auto">
-            Join thousands of players in the ultimate test of intuition and
+            Join hundreds of players in the ultimate test of intuition and
             deception. Trust nothing. Question everything.
           </p>
 

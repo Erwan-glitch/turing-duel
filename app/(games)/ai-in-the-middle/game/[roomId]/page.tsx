@@ -66,13 +66,14 @@ function RevealView({
           Homepage
         </Button>
       </div>
-      
+
       <div className="text-xs mt-2 break-all">{shareUrl}</div>
     </div>
   );
 }
 
 export default function GamePage() {
+  const router = useRouter();
   const params = useParams();
   const roomId = Array.isArray(params.roomId)
     ? params.roomId[0]
@@ -162,12 +163,22 @@ export default function GamePage() {
 
     socket.on("game_result", onGameResult);
 
+    const onErrorMessage = (data: { message: string; kick: boolean }) => {
+      alert(data.message);
+      if (data.kick) {
+        router.push("/");
+      }
+    };
+
+    socket.on("error_message", onErrorMessage);
+
     return () => {
       socket.off("game_state", onGameState);
       socket.off("receive_message", onMessage);
       socket.off("game_result", onGameResult);
+      socket.off("error_message", onErrorMessage);
     };
-  }, [roomId, socket]);
+  }, [roomId, socket, router]);
 
   const sendMessage = () => {
     if (!input) return;
