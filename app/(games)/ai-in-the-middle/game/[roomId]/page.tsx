@@ -166,11 +166,16 @@ export default function GamePage() {
     const onErrorMessage = (data: { message: string; kick: boolean }) => {
       alert(data.message);
       if (data.kick) {
-        router.push("/");
+        router.push("/ai-in-the-middle/");
       }
     };
 
     socket.on("error_message", onErrorMessage);
+
+    socket.on("disconnect", () => {
+      alert("Disconnected from server");
+      router.push("/ai-in-the-middle/");
+    });
 
     return () => {
       socket.off("game_state", onGameState);

@@ -2,8 +2,8 @@
 
 import { motion } from "motion/react";
 import { useState, useEffect } from "react";
-import { Zap } from "lucide-react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export function Navbar() {
   const router = useRouter();
@@ -38,7 +38,13 @@ export function Navbar() {
           onClick={handleLogoClick}
           className="flex items-center gap-2 text-white hover:text-cyan-400 transition-colors"
         >
-          <Zap className="size-5 text-cyan-400" />
+          <Image
+            src="/icons/icon-192.png"
+            alt="Turing Duel Logo"
+            width={48}
+            height={48}
+            className="rounded-lg"
+          />
           <span className="font-bold">Turing Duel</span>
         </button>
 

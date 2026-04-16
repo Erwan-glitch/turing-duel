@@ -23,12 +23,17 @@ export function Footer() {
 
           {/* Links */}
           <div className="flex gap-6 text-sm text-slate-500">
-            <a href="#" className="hover:text-cyan-400 transition-colors">
+            <a
+              href="https://github.com/Erwan-glitch/turing-duel"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-cyan-400 transition-colors"
+            >
               GitHub
             </a>
-            <a href="#" className="hover:text-cyan-400 transition-colors">
+            {/* <a href="#" className="hover:text-cyan-400 transition-colors">
               Privacy
-            </a>
+            </a> */}
             <a
               href="mailto:github.com.3bn2j@passmail.com"
               className="hover:text-cyan-400 transition-colors"
