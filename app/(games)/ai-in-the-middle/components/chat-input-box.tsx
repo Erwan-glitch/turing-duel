@@ -64,13 +64,13 @@ export const ChatInputBox = ({
           {inputLength}/{maxLength}
         </div>
 
-        <Button
+        {/* <Button
           className="bg-yellow-500/70 text-white"
           onClick={() => {}}
           disabled={true}
         >
           <Sparkles className="size-5" />
-        </Button>
+        </Button> */}
 
         <Button
           className="bg-green-500/70 text-white mr-2"
