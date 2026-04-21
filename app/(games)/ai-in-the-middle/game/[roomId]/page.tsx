@@ -8,7 +8,7 @@ import { ChatView } from "../../components/chat-view";
 import { SideBySideChat } from "../../components/side-by-side-chat";
 import { ChatInputBox } from "../../components/chat-input-box";
 import { Button } from "@/app/components/ui/button";
-import { ClipboardCopy, Home, Play } from "lucide-react";
+import { ClipboardCopy, HandCoins, Home, Play } from "lucide-react";
 
 function RevealView({
   messages,
@@ -54,6 +54,16 @@ function RevealView({
         >
           <Play className="size-5"></Play>
           Play Again
+        </Button>
+
+        <Button
+          className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-12 py-6 text-lg rounded-full shadow-lg shadow-green-500/50 transition-all hover:shadow-xl hover:brightness-110 hover:scale-105 group"
+          onClick={() => {
+            router.push("/donate");
+          }}
+        >
+          <HandCoins className="size-5"></HandCoins>
+          Donate
         </Button>
 
         <Button

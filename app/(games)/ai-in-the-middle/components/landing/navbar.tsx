@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { HandCoins } from "lucide-react";
 
 export function Navbar() {
   const router = useRouter();
@@ -48,8 +49,8 @@ export function Navbar() {
           <span className="font-bold">Turing Duel</span>
         </button>
 
-        {/* <div className="flex items-center gap-6">
-          <a
+        <div className="flex items-center gap-6">
+          {/* <a
             href="#how-it-works"
             className="text-slate-400 hover:text-white transition-colors text-sm"
           >
@@ -60,11 +61,15 @@ export function Navbar() {
             className="text-slate-400 hover:text-white transition-colors text-sm"
           >
             Features
-          </a>
-          <button className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white px-6 py-2 rounded-full text-sm font-medium transition-all hover:scale-105">
-            Play Now
+          </a> */}
+          <button
+            className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white px-6 py-2 rounded-full text-sm font-medium transition-all hover:scale-105 flex items-center gap-2 cursor-pointer"
+            onClick={() => router.push("/donate")}
+          >
+            <HandCoins className="size-5 inline-block" />
+            Donate
           </button>
-        </div> */}
+        </div>
       </div>
     </motion.nav>
   );
