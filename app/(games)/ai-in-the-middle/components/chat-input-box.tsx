@@ -9,6 +9,7 @@ export const ChatInputBox = ({
   stopGame,
   isGameOver,
   isMyTurn,
+  isStopDisabled,
 }: {
   input: string;
   setInput: (input: string) => void;
@@ -16,6 +17,7 @@ export const ChatInputBox = ({
   stopGame: () => void;
   isGameOver: boolean;
   isMyTurn: boolean;
+  isStopDisabled: boolean;
 }) => {
   const inputLength = input.length;
   const maxLength = 200;
@@ -51,7 +53,7 @@ export const ChatInputBox = ({
         <Button
           className="bg-gradient-to-r from-red-500/70 to-orange-500/70 text-white m-2 shrink min-w-0"
           onClick={stopGame}
-          disabled={isGameOver}
+          disabled={isGameOver || isStopDisabled}
           size={"lg"}
         >
           <OctagonPause className="size-5" />

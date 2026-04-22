@@ -26,7 +26,7 @@ function RevealView({
   const router = useRouter();
 
   return (
-    <div className="p-4 flex flex-col gap-4">
+    <div className="py-2 flex flex-col gap-4">
       <h2 className="text-lg font-bold mb-4">🔍 What actually happened</h2>
 
       <SideBySideChat
@@ -238,11 +238,13 @@ export default function GamePage() {
 
   return (
     <div className="flex flex-col gap-4 p-4 mx-auto w-[100dvw] h-[100dvh] bg-slate-900">
-      <h1 className="text-xl font-bold mb-4">Turing Duel</h1>
+      <h1 className="text-xl font-bold mb-4">AI In The Middle</h1>
 
       {gameResult && (
         <>
-          <div className="mb-4 p-3 border rounded">
+          <div
+            className={`p-3 border rounded ${gameResult.winner === myId ? "bg-green-700" : gameResult.winner === "AI" ? "bg-slate-600" : "bg-red-800"}`}
+          >
             <div className="font-bold">
               {gameResult.winner === myId
                 ? "🎉 You win!"
@@ -251,16 +253,16 @@ export default function GamePage() {
                   : "💀 You lose!"}
             </div>
 
-            <div className="text-sm text-gray-600">
+            <div className="text-sm text-slate-300">
               Reason: {gameResult.reason}
             </div>
 
-            <div className="text-xs text-gray-400">
+            <div className="text-xs text-slate-400">
               Takeover turn: {gameResult.takeoverTurn}
             </div>
           </div>
 
-          <div className="text-xs text-gray-500">
+          <div className="text-xs text-slate-400">
             {gameResult.stoppedBy === myId
               ? "You stopped the game"
               : "Opponent stopped the game"}
@@ -293,6 +295,7 @@ export default function GamePage() {
             stopGame={stopGame}
             isGameOver={isGameOver}
             isMyTurn={isMyTurn}
+            isStopDisabled={messages.length === 0} // can't stop before any message is sent
           ></ChatInputBox>
         </>
       )}

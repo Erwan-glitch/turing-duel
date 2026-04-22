@@ -13,11 +13,11 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 
 ## TO-DO
 
-- domain name
 - Add a favicon
 - Payment system (donations first)
 - Database (save games history for sharing)
 - Replay interaction
+- Post game chat with rematch option
 
 ## Learn More
 
