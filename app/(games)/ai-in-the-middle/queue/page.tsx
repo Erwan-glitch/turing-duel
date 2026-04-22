@@ -3,6 +3,7 @@
 import { useSocket } from "@/app/providers/socket-provider";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import PlayersCounter from "../components/landing/players-counter";
 
 export default function QueuePage() {
   const socket = useSocket();
@@ -53,20 +54,7 @@ export default function QueuePage() {
         The AI is preparing your opponent. Please wait.
       </p>
 
-      {onlineCount > 0 && (
-        <div className="mt-12 flex items-center justify-center gap-8 text-slate-500 text-sm">
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-            <span>
-              {`${onlineCount} player${onlineCount > 1 ? "s" : ""} online`}
-            </span>
-          </div>
-          <div className="hidden sm:block w-1 h-1 bg-slate-600 rounded-full" />
-          <div>
-            <span>Average wait time: 8 seconds</span>
-          </div>
-        </div>
-      )}
+      <PlayersCounter onlineCount={onlineCount} />
     </div>
   );
 }

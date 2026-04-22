@@ -238,7 +238,7 @@ export default function GamePage() {
 
   return (
     <div className="flex flex-col gap-4 p-4 mx-auto w-[100dvw] h-[100dvh] bg-slate-900">
-      <h1 className="text-xl font-bold mb-4">AI In The Middle</h1>
+      <h1 className="text-xl font-bold">AI In The Middle</h1>
 
       {gameResult && (
         <>

@@ -3,6 +3,7 @@
 import { motion } from "motion/react";
 import { MessageSquare } from "lucide-react";
 import { Button } from "../../../../components/ui/button";
+import PlayersCounter from "./players-counter";
 
 export function HeroSection({
   onJoinQueue,
@@ -59,23 +60,7 @@ export function HeroSection({
           </Button>
         </motion.div>
 
-        <div className="mt-12 flex items-center justify-center gap-8 text-slate-500 text-sm">
-          {onlineCount > 0 && (
-            <>
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                <span>
-                  {`${onlineCount} player${onlineCount > 1 ? "s" : ""} online`}
-                </span>
-              </div>
-
-              <div className="sm:block w-1 h-1 bg-slate-600 rounded-full" />
-            </>
-          )}
-          <div>
-            <span>Average wait time: 8 s</span>
-          </div>
-        </div>
+        <PlayersCounter onlineCount={onlineCount} />
 
         {/* Scroll indicator */}
         <motion.div

@@ -26,7 +26,7 @@ export function ChatView({
   return (
     <div
       ref={containerRef}
-      className="bg-slate-800 rounded-xl h-full min-w-[80vw] overflow-y-scroll p-2 flex flex-col justify-end"
+      className="bg-slate-800 rounded-xl h-full min-w-[300px] overflow-y-scroll p-2 flex flex-col justify-end"
     >
       {messages.map((msg, i) => {
         const isMe =
